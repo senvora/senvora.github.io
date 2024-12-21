@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senvora Github Repository</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .file-item {
+            margin: 10px 0;
+        }
+        .file-name {
+            font-weight: bold;
+        }
+        .file-link, .download-link {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selected Files in My Repository</h1>
+    <div id="file-list"></div>
+
+    <script>
+        const selectedFiles = [
+            'epg.xml.gz',
+            'jiotv.xml.gz',
+            'tataplay.xml.gz'
+            // Add more file names as needed
+        ];
+
+        const fileList = document.getElementById('file-list');
+
+        fetch('https://api.github.com/repos/senvora/senvora.github.io/contents')
+            .then(response => response.json())
+            .then(files => {
+                files
+                    .filter(file => selectedFiles.includes(file.name))
+                    .forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+
+                        const fileName = document.createElement('span');
+                        fileName.className = 'file-name';
+                        fileName.textContent = file.name;
+
+                        const fileLink = document.createElement('a');
+                        fileLink.className = 'file-link';
+                        fileLink.href = file.html_url;
+                        fileLink.textContent = 'View';
+
+                        const downloadLink = document.createElement('a');
+                        downloadLink.className = 'download-link';
+                        downloadLink.href = file.download_url;
+                        downloadLink.textContent = 'Download';
+
+                        fileItem.appendChild(fileName);
+                        fileItem.appendChild(fileLink);
+                        fileItem.appendChild(downloadLink);
+                        fileList.appendChild(fileItem);
+                    });
+            })
+            .catch(error => console.error('Error fetching file list:', error));
+    </script>
+</body>
+</html>
